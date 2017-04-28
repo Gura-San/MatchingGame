@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="Sandro Guraspasvili" content="WebStorm_2016.2.3">
+  <meta name="Matching Game Assessment" content="HTML, JavaScript">
+  <title>SmileMatchingGame</title>
+
+  <style>
+    .div {position: absolute; width: 500px; height: 500px;}
+    #rightSide {left: 500px; border-left: 5px solid black;}
+    img {position: absolute;}
+    * {font-family: Verdana;}
+    #button {position: absolute; left: 470px; top: 630px;}
+
+  </style>
+
+  <script async>
+    //EventListener to start the main game function
+    window.addEventListener("load", generateFaces);
+
+    var numberOfFaces = 5;
+
+    // the main game function which I do not like - to cluttered.
+    function generateFaces() {
+
+      //the veriables from the task list
+      var theLeftSide = document.getElementById("leftSide");
+      var theRightSide = document.getElementById("rightSide");
+      var theBody = document.getElementsByTagName("body")[0];
+      var theButton = document.getElementById("button");
+
+      //leftside pic generation
+      for (i = 0; i < numberOfFaces; i++) {
+        position = Position();
+        var smileyFace = document.createElement("img");
+        smileyFace.src = "http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";
+        smileyFace.style.top = position[0] + "px";
+        smileyFace.style.left = position[1] + "px";
+        theLeftSide.appendChild(smileyFace);
+      }
+
+      //pic-branch copy to the right side
+      var leftSideImages = theLeftSide.cloneNode(true);
+      leftSideImages.removeChild(leftSideImages.lastElementChild);
+      theRightSide.appendChild(leftSideImages);
+
+      //the next level function
+      theLeftSide.lastChild.onclick = function nextLevel(event) {
+        while (theLeftSide.firstChild){
+          theLeftSide.removeChild(theLeftSide.firstChild);
+        }
+
+        //this style of removing the right side really bugs me
+        //the fact that the div is sitting on other div
+        //and breaks the logical system is annoying
+        //tried sorting it but failed miserably ((
+        theRightSide.removeChild(theRightSide.firstChild);
+
+        numberOfFaces += 5;
+        event.stopPropagation();
+        generateFaces()
+      }
+
+      //the restart button function
+      button.onclick = function restart() {
+        event.stopPropagation();
+        location.reload();
+      }
+
+      //the gameover function
+      theBody.onclick = function gameover() {
+        alert("Game Over!");
+        theBody.onclick = null;
+        theLeftSide.lastElementChild.onclick = null;
+      }
+    }
+
+    //random position generator for the pics
+    function Position() {
+      var xy = [];
+      xy[0] = Math.floor(Math.random() * 400);
+      xy[1] = Math.floor(Math.random() * 400);
+
+      return xy;
+    }
+
+
+  </script>
+
+</head>
+<body id="theBody">
+
+<h2 id="mainHeader">Matching Game</h2>
+<p id="descriptor">Click on the extra smiling face on the left.</p>
+
+<div id="leftSide" class="div"></div>
+<div id="rightSide" class="div"></div>
+
+<button id="button" type="button">Restart</button>
+
+</body>
+</html>
